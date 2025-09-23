@@ -22,10 +22,12 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          hover: "hsl(var(--primary-hover))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+          hover: "hsl(var(--secondary-hover))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -81,9 +83,33 @@ export default {
           },
         },
       },
+      backgroundImage: {
+        'gradient-medical': 'var(--gradient-medical)',
+        'gradient-success': 'var(--gradient-success)',
+        'gradient-surface': 'var(--gradient-surface)',
+        'gradient-hero': 'var(--gradient-hero)',
+      },
+      boxShadow: {
+        'medical': 'var(--shadow-medical)',
+        'success': 'var(--shadow-success)',
+        'elevated': 'var(--shadow-elevated)',
+      },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pulse-slow": "pulse var(--pulse-duration) cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "fade-in": "fadeIn 0.5s ease-out",
+        "slide-up": "slideUp 0.5s ease-out",
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        slideUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
       },
     },
   },
