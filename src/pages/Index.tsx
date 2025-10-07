@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,38 +9,53 @@ import { TreatmentRecommendations } from "@/components/TreatmentRecommendations"
 import { Brain, Zap, Target, Activity, Shield, Clock } from "lucide-react";
 import brainMriHero from "@/assets/brain-mri-hero.jpg";
 import aiBrainIcon from "@/assets/ai-brain-icon.jpg";
+import MRIOverlay from "../components/MRIOverlay";
 
 const Index = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisComplete, setAnalysisComplete] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<FileList | null>(null);
-
-  // Simulated diagnosis results - in real app this would come from your PyTorch model
-  const mockDiagnosisResults = {
-    tumorDetected: true,
-    confidence: 94.2,
-    tumorType: "Glioblastoma",
-    tumorVolume: 12.4,
-    location: "Left frontal lobe, involving white matter",
-    segmentationMetrics: {
-      diceScore: 0.891,
-      hausdorffDistance: 2.3,
-      volumeError: 0.057
-    }
-  };
+  const [diagnosisResults, setDiagnosisResults] = useState<any | null>(null);
 
   const handleFileUpload = (files: FileList) => {
     setUploadedFiles(files);
     setAnalysisComplete(false);
+    setDiagnosisResults(null);
   };
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
+    if (!uploadedFiles) return;
     setIsAnalyzing(true);
-    // Simulate AI processing time
-    setTimeout(() => {
-      setIsAnalyzing(false);
+
+    const formData = new FormData();
+    Array.from(uploadedFiles).forEach(file => formData.append('files', file));
+
+    try {
+      const response = await fetch('http://localhost:8000/analyze', {
+        method: 'POST',
+        body: formData,
+      });
+      if (!response.ok) throw new Error('Failed to analyze MRI scans');
+      const result = await response.json();
+      setDiagnosisResults(result);
       setAnalysisComplete(true);
-    }, 4000);
+      toast({
+        title: "Analysis Complete",
+        description: "AI analysis finished successfully.",
+        variant: "success"
+      });
+    } catch (error) {
+      toast({
+        title: "Analysis Error",
+        description: error instanceof Error ? error.message : String(error),
+        variant: "destructive"
+      });
+      setDiagnosisResults(null);
+      setAnalysisComplete(false);
+      console.error("AI Analysis Error:", error);
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   return (
@@ -177,25 +193,25 @@ const Index = () => {
             )}
 
             {/* Analysis Results */}
-            {(isAnalyzing || analysisComplete) && (
+            {(isAnalyzing || (analysisComplete && diagnosisResults)) && (
               <DiagnosisResults 
-                results={mockDiagnosisResults}
+                results={diagnosisResults}
                 isLoading={isAnalyzing}
               />
             )}
 
             {/* Treatment Recommendations */}
-            {analysisComplete && mockDiagnosisResults.tumorDetected && (
+            {analysisComplete && diagnosisResults?.tumorDetected && (
               <TreatmentRecommendations
-                tumorType={mockDiagnosisResults.tumorType}
-                tumorVolume={mockDiagnosisResults.tumorVolume}
-                location={mockDiagnosisResults.location}
-                confidence={mockDiagnosisResults.confidence}
+                tumorType={diagnosisResults.tumorType}
+                tumorVolume={diagnosisResults.tumorVolume}
+                location={diagnosisResults.location}
+                confidence={diagnosisResults.confidence}
               />
             )}
 
-            {/* MRI Visualization */}
-            {analysisComplete && (
+            {/* MRI Visualization: Always show after analysis */}
+            {analysisComplete && diagnosisResults && (
               <Card className="shadow-elevated animate-fade-in">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -229,3 +245,7 @@ const Index = () => {
 };
 
 export default Index;
+<MRIOverlay
+  mriUrl="/api/mri.png"      // Replace with your MRI image endpoint
+  maskUrl="/api/mask.png"    // Replace with your mask PNG endpoint
+/>
