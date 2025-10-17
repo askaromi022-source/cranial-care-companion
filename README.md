@@ -1,18 +1,16 @@
-# Welcome to your Lovable project
+# Welcome to NeuroAI Pro: AI-Powered Brain Tumor Detection System
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/2d6ecf2a-7e4c-42cd-bbc1-cfdb76637d71
+**URL**: http://localhost:8080/
 
 ## How can I edit this code?
 
 There are several ways of editing your application.
 
-**Use Lovable**
+**Use Locally with Python & Node.js
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/2d6ecf2a-7e4c-42cd-bbc1-cfdb76637d71) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
+You can run both the **backend (FastAPI)** and the **frontend (React)** locally.
 
 **Use your preferred IDE**
 
@@ -35,6 +33,16 @@ npm i
 # Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
+#### Backend Setup
+```bash
+# Step 1: Navigate to backend folder
+cd backend
+
+# Step 2: Install Python dependencies
+pip install -r requirements.txt
+
+# Step 3: Run the FastAPI server
+uvicorn app:app --reload
 
 **Edit a file directly in GitHub**
 
@@ -59,15 +67,20 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
+- FastAPI
 
-## How can I deploy this project?
+**Usage
 
-Simply open [Lovable](https://lovable.dev/projects/2d6ecf2a-7e4c-42cd-bbc1-cfdb76637d71) and click on Share -> Publish.
+Run the FastAPI backend.
 
-## Can I connect a custom domain to my Lovable project?
+Launch the React frontend.
 
-Yes, you can!
+Upload an MRI scan (.nii or .nii.gz).
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+See:
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Original MRI slices
+
+Tumor segmentation output
+
+Confidence metrics

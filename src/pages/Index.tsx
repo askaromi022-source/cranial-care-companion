@@ -9,6 +9,7 @@ import { TreatmentRecommendations } from "@/components/TreatmentRecommendations"
 import { Brain, Zap, Target, Activity, Shield, Clock } from "lucide-react";
 import brainMriHero from "@/assets/brain-mri-hero.jpg";
 import aiBrainIcon from "@/assets/ai-brain-icon.jpg";
+import MRIOverlay from "../components/MRIOverlay";
 
 
 const Index = () => {
@@ -245,3 +246,7 @@ const Index = () => {
 };
 
 export default Index;
+<MRIOverlay
+  mriUrl="/api/mri.png"      // Replace with your MRI image endpoint
+  maskUrl="/api/mask.png"    // Replace with your mask PNG endpoint
+/>
